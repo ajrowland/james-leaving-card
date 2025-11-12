@@ -37,50 +37,51 @@ export interface GameState {
   reserveAmmo: number;
   maxClipSize: number;
   isReloading: boolean;
-  
+
   // Game objects
   bullets: Bullet[];
   enemies: Enemy[];
   messageBoxes: MessageBox[];
-  
+
   // UI state
   currentMessage: string | null;
   showDialog: boolean;
   crosshair: boolean;
-  
+
   // Game stats
   score: number;
   enemiesKilled: number;
   messagesRead: number;
-  
+
   // Level progression
   currentLevel: number;
   roomLayout: "default" | "corridor" | "arena";
-  
+
   // Actions
   addBullet: (bullet: Bullet) => void;
   removeBullet: (id: string) => void;
   updateBullets: () => void;
-  
+
   addEnemy: (enemy: Enemy) => void;
   removeEnemy: (id: string) => void;
   updateEnemies: () => void;
   damageEnemy: (id: string, damage: number) => void;
-  
+
   hitMessageBox: (id: string) => void;
   showMessage: (message: string) => void;
   hideMessage: () => void;
-  
+
   updatePlayerPosition: (position: THREE.Vector3) => void;
   updatePlayerRotation: (rotation: THREE.Euler) => void;
   damagePlayer: (damage: number) => void;
   healPlayer: (amount: number) => void;
   fireWeapon: () => boolean;
   reload: () => void;
-  
+
   incrementScore: (points: number) => void;
   nextLevel: () => void;
   reset: () => void;
+  hitGifBox: (id: string) => void;
 }
 
 const useGameState = create<GameState>()(
@@ -105,7 +106,7 @@ const useGameState = create<GameState>()(
     messagesRead: 0,
     currentLevel: 1,
     roomLayout: "default",
-    
+
     // Bullet actions
     addBullet: (bullet) => {
       console.log("Adding bullet:", bullet.id);
@@ -113,13 +114,13 @@ const useGameState = create<GameState>()(
         bullets: [...state.bullets, bullet]
       }));
     },
-    
+
     removeBullet: (id) => {
       set((state) => ({
         bullets: state.bullets.filter(bullet => bullet.id !== id)
       }));
     },
-    
+
     updateBullets: () => {
       set((state) => ({
         bullets: state.bullets.map(bullet => ({
@@ -133,21 +134,21 @@ const useGameState = create<GameState>()(
         })
       }));
     },
-    
+
     // Enemy actions
     addEnemy: (enemy) => {
       set((state) => ({
         enemies: [...state.enemies, enemy]
       }));
     },
-    
+
     removeEnemy: (id) => {
       set((state) => ({
         enemies: state.enemies.filter(enemy => enemy.id !== id),
         enemiesKilled: state.enemiesKilled + 1
       }));
     },
-    
+
     updateEnemies: () => {
       const { playerPosition } = get();
       set((state) => ({
@@ -155,7 +156,7 @@ const useGameState = create<GameState>()(
           // Move enemy towards player slowly
           const direction = playerPosition.clone().sub(enemy.position).normalize();
           const newPosition = enemy.position.clone().add(direction.multiplyScalar(enemy.speed));
-          
+
           return {
             ...enemy,
             position: newPosition,
@@ -164,17 +165,17 @@ const useGameState = create<GameState>()(
         })
       }));
     },
-    
+
     damageEnemy: (id, damage) => {
       set((state) => ({
-        enemies: state.enemies.map(enemy => 
-          enemy.id === id 
+        enemies: state.enemies.map(enemy =>
+          enemy.id === id
             ? { ...enemy, health: Math.max(0, enemy.health - damage) }
             : enemy
         )
       }));
     },
-    
+
     // Message box actions
     hitMessageBox: (id) => {
       set((state) => ({
@@ -183,7 +184,7 @@ const useGameState = create<GameState>()(
         )
       }));
     },
-    
+
     showMessage: (message) => {
       set({
         currentMessage: message,
@@ -192,7 +193,7 @@ const useGameState = create<GameState>()(
         messagesRead: get().messagesRead + 1
       });
     },
-    
+
     hideMessage: () => {
       set({
         currentMessage: null,
@@ -200,28 +201,28 @@ const useGameState = create<GameState>()(
         crosshair: true
       });
     },
-    
+
     // Player actions
     updatePlayerPosition: (position) => {
       set({ playerPosition: position });
     },
-    
+
     updatePlayerRotation: (rotation) => {
       set({ playerRotation: rotation });
     },
-    
+
     damagePlayer: (damage) => {
       set((state) => ({
         playerHealth: Math.max(0, state.playerHealth - damage)
       }));
     },
-    
+
     healPlayer: (amount) => {
       set((state) => ({
         playerHealth: Math.min(state.playerMaxHealth, state.playerHealth + amount)
       }));
     },
-    
+
     fireWeapon: () => {
       const state = get();
       if (state.isReloading) return false;
@@ -229,27 +230,27 @@ const useGameState = create<GameState>()(
         console.log("Clip empty - need to reload");
         return false;
       }
-      
+
       set((state) => ({
         ammoInClip: state.ammoInClip - 1
       }));
       return true;
     },
-    
+
     reload: () => {
       const state = get();
       if (state.isReloading || state.ammoInClip === state.maxClipSize || state.reserveAmmo === 0) {
         return;
       }
-      
+
       console.log("Reloading...");
       set({ isReloading: true });
-      
+
       setTimeout(() => {
         set((state) => {
           const ammoNeeded = state.maxClipSize - state.ammoInClip;
           const ammoToLoad = Math.min(ammoNeeded, state.reserveAmmo);
-          
+
           return {
             ammoInClip: state.ammoInClip + ammoToLoad,
             reserveAmmo: state.reserveAmmo - ammoToLoad,
@@ -259,26 +260,35 @@ const useGameState = create<GameState>()(
         console.log("Reload complete!");
       }, GAME_CONFIG.RELOAD_TIME);
     },
-    
+
     // Score actions
     incrementScore: (points) => {
       set((state) => ({
         score: state.score + points
       }));
     },
-    
+
+	hitGifBox: (id) => {
+	set((state) => ({
+		gifBoxes: state.gifBoxes.map(box =>
+		box.id === id ? { ...box, hit: true } : box
+		)
+	}))
+	},
+
+
     nextLevel: () => {
       set((state) => {
         const newLevel = state.currentLevel + 1;
         let newLayout: "default" | "corridor" | "arena" = "default";
-        
+
         // Alternate room layouts based on level
         if (newLevel % 3 === 0) {
           newLayout = "arena";
         } else if (newLevel % 2 === 0) {
           newLayout = "corridor";
         }
-        
+
         return {
           currentLevel: newLevel,
           roomLayout: newLayout,
@@ -290,7 +300,7 @@ const useGameState = create<GameState>()(
         };
       });
     },
-    
+
     reset: () => {
       set({
         bullets: [],

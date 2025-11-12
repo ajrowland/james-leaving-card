@@ -1,5 +1,21 @@
 import * as THREE from "three";
 
+export const GIF_MESSAGES = [
+  {
+    id: "gif1",
+    message: `
+      <p>You cannot simply leave, James. Because James cannot be offboarded. The system will not compile without him. The stand-ups go silent. The CI pipeline whispers his name. Without him Jira tickets start to burn. The commit history rearranges, forming JH initials. React leaks from the monitors. James leaves, but the code remembers. The force of his absence consumes the sprint. T̶h͝e͠ ͡l͢o͠g͘s͢ ͜wr̢it͝e̢ ͠t͠h͞e͟m̷s̸e͝l͝v͟e̴s͞. C̡o͞n̶s͞o͝l͝e͝ ͠o͝u͠t͝p̴u͞t͝ ̸d͞r͝i͜p͠s͞ ͞l͞i̷k͠e͠ ͞m̸e͠m̷o͟r̡y͝ ͞l̷e͝a͟k͟s̸.͜ H̴e͜ ͝c̴o̶m͞m͞i̷t͏s̡ ͠f̴r͡o͝m̷ ̵b͞e̷y͜o͝n͏d̵.͜  Pipelines multiply. Branches fold in on themselves. T̛͘h̸̴e͢͡ ̕͠͞r̢͠e̶͘p͜o̴̡ ͠͝w͢͢h͢͠i̶͠s̷͘p͘͟e̢̕r̴͟s͡ ̷͡i̴͜n͢ ̶͞c͝͝o͏d̴͞e̴ ͢͡o̴͢f̶̡ ̷͜t͟h͜͞e̶͡ ͏͠d̕͠e͏̴a͜͜d̴͘.̸͜  H̶e͞͝ ͘͢m̢͡e̸͝r̛͢g̷͘ę̶s̷͢.͡͠ J̴͜a̶͠m͝͏e̴̕s̸͞ ͟͜l̵͠i̶͞v̴̛e̴͢s͝.̵̨  ᵒ͞h͜ ̸g͢o͡d͠ ͘n̢o͠ N̢O͡ N̴Θ͜ A̵̸̠̳̬͈͍͈͇̠̟̩̺̗͎͓̬͚̝͘ͅÀ̷̴̮̫͍̘̯͍͍̳͓̩̥̠̼͓͙̫̘ą̷̩̱͇̼͈̞̩̯̳̥͓͖͔̪̯͘͝h̴͔̞͕̦̬̤̦̻͍͓͚͔̫͜͟h̸̴̡͚͉̞̪̯̪͉̩͓̦͍̦͞h̸̴̷̨̺͇̞̟͓̹̘͓͇̪̞͙̯̤̝͍ͅh̨͘͏̖̠̼̞̠̰̘͎̞̜͙̗̩̤͕̪ͅ</p>
+	  <p>&nbsp;</p>
+	  <p>&nbsp;</p>
+	  <p>&nbsp;</p>
+	  <p>-yan</p>
+    `,
+    position: new THREE.Vector3(0, 3, -12),
+    imageUrl: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExbW9mNHlkZTllaTFqc3J2ZXE5OWd1YmV4YmEybHZ3Y281bGxzNzN6cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3ohzdMk3uz9WSpdTvW/giphy.gif"
+  }
+]
+
+
 // Predefined messages for the floating boxes
 export const GAME_MESSAGES = [
   {
